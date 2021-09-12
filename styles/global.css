@@ -1,0 +1,40 @@
+/* ./styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-Light.woff2");
+  font-weight: 300;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-Regular.woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-Medium.woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-DemiBold.woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-Bold.woff2");
+  font-weight: 700;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-ExtraBold.woff2");
+  font-weight: 800;
+}
+@font-face {
+  font-family: TTCommons;
+  src: url("../public/assets/fonts/TTCommons-Black.woff2");
+  font-weight: 900;
+}
