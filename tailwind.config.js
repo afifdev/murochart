@@ -4,13 +4,20 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      colors: {
+        "white-soft": "#FAFAFA",
+      },
       fontFamily: {
         cool: ["TTCommons", "sans-serif"],
+      },
+      screens: {
+        phone: "400px",
       },
     },
   },
   variants: {
+    scrollbar: ["rounded"],
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };
