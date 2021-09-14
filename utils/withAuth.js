@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useContext } from "react";
 import { UserContext } from "./useUser";
 import Home from "@pages/index";
@@ -9,6 +10,9 @@ const withAuth = (Component, portal) => {
     if (!user.isDone) {
       return (
         <Layout>
+          <Head>
+            <title>Loading...</title>
+          </Head>
           <div>Loading...from withAuth</div>
         </Layout>
       );
