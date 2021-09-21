@@ -10,8 +10,8 @@ export default async function login(req, res) {
       try {
         const surahs = await Quran.find(
           {},
-          { id: 1, name: 1, transliteration: 1, total_verses: 1 }
-        ).sort({ id: 1 });
+          { surah_id: 1, name: 1, transliteration: 1, total_verses: 1 }
+        ).sort({ surah_id: 1 });
         return res.json(surahs);
       } catch (err) {
         return res.json({ error: "Error on calling API" });

@@ -10,17 +10,20 @@ export default async function login(req, res) {
     case "GET":
       try {
         if (params.length === 1) {
-          const surah = await Quran.findOne({ id: parseInt(params[0]) });
+          const surah = await Quran.findOne({ surah_id: parseInt(params[0]) });
           return res.json(surah);
         } else if (params.length === 2) {
           const surah = await Quran.findOne(
             {
-              id: parseInt(params[0]),
-              "verses.$.id": parseInt(params[1]),
+              surah_id: parseInt(params[0]),
+              verses: { $elemMatch: { verse_id: parseInt(params[1]) } },
             },
-            { name: 1, transliteration: 1, "verses.$": 1 }
+            { name: 1, transliteration: 1, verses: 1 }
           );
-          return res.json(surah);
+          if (surah) {
+            return res.json(surah);
+          }
+          return res.json({ error: "No data found" });
         } else {
           return res.json({ error: "Error on calling APIIIIIII" });
         }
