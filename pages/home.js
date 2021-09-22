@@ -1,66 +1,23 @@
 import Head from "next/head";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import withAuth from "@utils/withAuth";
 import Layout from "@components/Layout";
 import Navbar from "@components/Navbar";
-import ChartLine from "@components/CharLine";
+import { UserContext } from "@utils/useUser";
 
 const Home = () => {
-  const [type, setType] = useState(1);
+  const user = useContext(UserContext);
+  const [progress, setProgress] = useState([]);
+  const [view, setView] = useState(1);
   const [openSurah, setOpenSurah] = useState(0);
   const [openVerse, setOpenVerse] = useState(0);
   const [quran, setQuran] = useState(null);
   const [surah, setSurah] = useState(0);
   const [verse, setVerse] = useState(0);
-
-  const data = [
-    {
-      balance: 180000,
-    },
-    {
-      balance: 300000,
-    },
-    {
-      balance: 220000,
-    },
-    {
-      balance: 190000,
-    },
-    {
-      balance: 400000,
-    },
-    {
-      balance: 390000,
-    },
-    {
-      balance: 700000,
-    },
-    {
-      balance: 680000,
-    },
-    {
-      balance: 690000,
-    },
-    {
-      balance: 590000,
-    },
-    {
-      balance: 805000,
-    },
-    {
-      balance: 600000,
-    },
-    {
-      balance: 610000,
-    },
-    {
-      balance: 360000,
-    },
-    {
-      balance: 400000,
-    },
-  ];
+  const [showStatus, setShowStatus] = useState(0);
+  const [status, setStatus] = useState(0);
+  const [reload, setReload] = useState(0);
 
   const showSurah = () => {
     setOpenVerse(0);
@@ -74,16 +31,16 @@ const Home = () => {
     }
   };
 
-  const setAllTime = () => {
-    setType(1);
+  const setViewAll = () => {
+    setView(1);
   };
 
-  const setMonthly = () => {
-    setType(2);
+  const setViewCompleted = () => {
+    setView(2);
   };
 
-  const setWeekly = () => {
-    setType(3);
+  const setViewOnGoing = () => {
+    setView(3);
   };
 
   const handleSurah = (e) => {
@@ -108,14 +65,55 @@ const Home = () => {
     }
   };
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
+  const getUserData = async () => {
+    try {
+      const { data } = await axios.get("/api/user", config);
+      if (data.error) {
+        console.log("fetching failed");
+      } else {
+        setProgress(data.progress);
+      }
+    } catch (err) {
+      console.log("error fetching user data");
+    }
+  };
+
   const insertProgress = async () => {
-    console.log(surah);
-    console.log(verse);
+    try {
+      setShowStatus(0);
+      const { data } = await axios.post(
+        "/api/user/progress",
+        { surah_id: surah, verse_id: verse },
+        config
+      );
+      if (data.error) {
+        setStatus(0);
+      } else {
+        setReload(-reload);
+        setStatus(1);
+      }
+      setShowStatus(1);
+      setTimeout(() => {
+        setShowStatus(0);
+      }, 5000);
+    } catch (err) {
+      console.log("Error on inserting progress");
+    }
   };
 
   useEffect(() => {
     getAllSurah();
   }, []);
+
+  useEffect(() => {
+    getUserData();
+  }, [reload]);
 
   return (
     <Layout>
@@ -128,37 +126,108 @@ const Home = () => {
           <p>Overview</p>
           <div className="flex items-center flex-wrap gap-4">
             <button
-              onClick={setAllTime}
-              className={`w-32 text-xl font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
-                type === 1 ? "bg-indigo-50 border-indigo-700" : ""
+              onClick={setViewAll}
+              className={`w-32 text-lg font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
+                view === 1 ? "bg-indigo-50 border-indigo-700" : ""
               }`}
             >
-              All Time
+              All
             </button>
             <button
-              onClick={setMonthly}
-              className={`w-32 text-xl font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
-                type === 2 ? "bg-indigo-50 border-indigo-700" : ""
+              onClick={setViewCompleted}
+              className={`w-32 text-lg font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
+                view === 2 ? "bg-indigo-50 border-indigo-700" : ""
               }`}
             >
-              Monthly
+              Completed
             </button>
             <button
-              onClick={setWeekly}
-              className={`w-32 text-xl font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
-                type === 3 ? "bg-indigo-50 border-indigo-700" : ""
+              onClick={setViewOnGoing}
+              className={`w-32 text-lg font-semibold grid place-items-center p-4 rounded-lg border-2 hover:bg-indigo-50 ${
+                view === 3 ? "bg-indigo-50 border-indigo-700" : ""
               }`}
             >
-              Weekly
+              On Going
             </button>
           </div>
           <p className="pt-4">Snapshots</p>
-          <div className="h-96">
-            <ChartLine isBalance data={data} />
-          </div>
+          {progress.length === 0 ? (
+            <div className="text-center">No Data Available</div>
+          ) : (
+            <div className="grid grid-cols-1 phone:grid-cols-2 laptop:grid-cols-3 gap-4">
+              {progress.map((surah) => {
+                if (view === 1) {
+                  return (
+                    <div
+                      key={surah.surah_id}
+                      className={`${
+                        surah.total_verses === surah.verse_id
+                          ? "bg-indigo-700 text-white"
+                          : ""
+                      } border-indigo-700 border-2 rounded-lg px-6 py-4`}
+                    >
+                      <div className="flex justify-between items-center flex-wrap phone:block font-semibold">
+                        <p className="text-xl">{surah.transliteration}</p>
+                        <p>{surah.total_verses} total verse</p>
+                      </div>
+                      <div className="text-xs phone:text-sm flex flex-wrap items-center justify-between">
+                        <p>{surah.verse_id} verse memorized</p>
+                        <p>{surah.total_verses - surah.verse_id} verse left</p>
+                      </div>
+                    </div>
+                  );
+                } else if (
+                  view === 2 &&
+                  surah.verse_id === surah.total_verses
+                ) {
+                  return (
+                    <div
+                      key={surah.surah_id}
+                      className="bg-indigo-700 text-white border-indigo-700 border-2 rounded-lg px-6 py-4"
+                    >
+                      <div className="flex justify-between items-center flex-wrap phone:block font-semibold">
+                        <p className="text-xl">{surah.transliteration}</p>
+                        <p>{surah.total_verses} total verse</p>
+                      </div>
+                      <div className="text-xs phone:text-sm flex flex-wrap items-center justify-between">
+                        <p>{surah.verse_id} verse memorized</p>
+                        <p>{surah.total_verses - surah.verse_id} verse left</p>
+                      </div>
+                    </div>
+                  );
+                } else if (
+                  view === 3 &&
+                  surah.verse_id !== surah.total_verses
+                ) {
+                  return (
+                    <div
+                      key={surah.surah_id}
+                      className="border-indigo-700 border-2 rounded-lg px-6 py-4"
+                    >
+                      <div className="flex justify-between items-center flex-wrap phone:block font-semibold">
+                        <p className="text-xl">{surah.transliteration}</p>
+                        <p>{surah.total_verses} total verse</p>
+                      </div>
+                      <div className="text-xs phone:text-sm flex flex-wrap items-center justify-between">
+                        <p>{surah.verse_id} verse memorized</p>
+                        <p>{surah.total_verses - surah.verse_id} verse left</p>
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          )}
         </div>
         <div className="p-6 space-y-4 w-full phone:w-72">
           <p>Insert progression</p>
+          <div
+            className={`${showStatus ? "block" : "hidden"} w-full ${
+              status ? "bg-green-500" : "bg-red-500"
+            } py-2 px-4 rounded-lg text-white font-medium`}
+          >
+            {status ? "Success" : "Error"}
+          </div>
           <button
             onClick={showSurah}
             className="text-left font-medium hover:bg-indigo-50 focus:bg-indigo-50 focus:border-indigo-700 rounded-lg border-2 py-2 px-4 w-full flex justify-between items-center"
@@ -188,8 +257,8 @@ const Home = () => {
               ? quran.map((q) => {
                   return (
                     <button
-                      key={q.id}
-                      value={q.id}
+                      key={q.surah_id}
+                      value={q.surah_id}
                       onClick={handleSurah}
                       className="text-left font-medium hover:bg-indigo-50 focus:bg-indigo-50 focus:border-indigo-700 rounded-lg border-2 py-2 px-4 w-full"
                     >
