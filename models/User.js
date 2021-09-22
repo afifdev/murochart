@@ -7,7 +7,7 @@ const User = new mongoose.Schema({
   progress: [
     {
       transliteration: String,
-      total_verse: Number,
+      total_verses: Number,
       surah_id: Number,
       verse_id: Number,
     },
