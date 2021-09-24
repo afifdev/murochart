@@ -1,5 +1,7 @@
 export default function validateForm(form) {
   if (
+    !form.image ||
+    form.image === "" ||
     !form.email ||
     form.email === "" ||
     form.email !== form.email.toLowerCase() ||
