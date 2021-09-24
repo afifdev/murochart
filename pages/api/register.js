@@ -29,6 +29,7 @@ export default async function register(req, res) {
           email: form.email,
           username: form.username,
           password: await hash(form.password, 12),
+          image: form.image,
         });
 
         const savedUser = await user.save();
