@@ -45,6 +45,7 @@ export default async function login(req, res) {
         return res.json({
           status: "Success",
           data: {
+            image: user.image,
             token,
           },
         });
