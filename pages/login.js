@@ -25,6 +25,7 @@ const Login = () => {
       }
       localStorage.setItem("murochart", data.data.token);
       user.setUsername(username);
+      user.setImage(data.data.image);
       user.setToken(data.data.token);
       user.setIsSigned(1);
     } catch (err) {
