@@ -118,7 +118,7 @@ const Home = () => {
   return (
     <Layout>
       <Head>
-        <title>Murochart | Chart for your Murojaah</title>
+        <title>Mup | Track your murojaah progress</title>
       </Head>
       <Navbar />
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-4">

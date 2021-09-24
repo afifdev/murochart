@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const [isDone, setIsDone] = useState(0);
 
   useEffect(async () => {
-    const systemToken = localStorage.getItem("murochart");
+    const systemToken = localStorage.getItem("mup");
     if (!systemToken) {
       setIsDone(1);
       return;
@@ -21,7 +21,7 @@ export const UserProvider = ({ children }) => {
       const user = jwt.decode(systemToken, process.env.JWT_SECRET);
       const { data } = await axios.post("/api/login", user);
       if (data.error) {
-        localStorage.removeItem("murochart");
+        localStorage.removeItem("mup");
         console.log("initial login error");
       } else {
         setUsername(user.username);
@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
         console.log("initial login success");
       }
     } catch (e) {
-      localStorage.removeItem("murochart");
+      localStorage.removeItem("mup");
       setIsDone(1);
       console.log("error calling api to start context");
     }

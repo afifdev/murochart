@@ -12,7 +12,7 @@ export default function Navbar() {
   };
 
   const logOut = () => {
-    localStorage.removeItem("murochart");
+    localStorage.removeItem("mup");
     user.setUsername("");
     user.setImage("");
     user.setToken("");

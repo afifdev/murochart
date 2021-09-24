@@ -23,7 +23,7 @@ const Login = () => {
         setError(1);
         return;
       }
-      localStorage.setItem("murochart", data.data.token);
+      localStorage.setItem("mup", data.data.token);
       user.setUsername(username);
       user.setImage(data.data.image);
       user.setToken(data.data.token);
@@ -51,11 +51,11 @@ const Login = () => {
   return (
     <Layout>
       <Head>
-        <title>Sign In | Murochart</title>
+        <title>Sign In | Mup</title>
       </Head>
       <div className="flex h-screen max-h-screen overflow-hidden">
         <div className="p-8 sm:p-16 w-100">
-          <p className="text-xl sm:text-3xl font-bold">Sign in to Murochart</p>
+          <p className="text-xl sm:text-3xl font-bold">Sign in to Mup</p>
           <p className="sm:whitespace-nowrap sm:text-lg pt-2">
             Please enter your username and password to proceed
           </p>

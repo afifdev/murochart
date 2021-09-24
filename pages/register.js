@@ -84,7 +84,7 @@ const Register = () => {
   return (
     <Layout>
       <Head>
-        <title>Sign Up | Murochart</title>
+        <title>Sign Up | Mup</title>
       </Head>
       <div className="flex h-screen max-h-screen overflow-hidden">
         <div className="p-8 sm:p-16 w-100">
@@ -109,7 +109,7 @@ const Register = () => {
               </a>
             </Link>
           </div>
-          <p className="text-xl sm:text-3xl font-bold">Sign up to Murochart</p>
+          <p className="text-xl sm:text-3xl font-bold">Sign up to Mup</p>
           <p className="sm:whitespace-nowrap sm:text-lg pt-2">
             Please enter valid information to proceed registration&nbsp;
           </p>
