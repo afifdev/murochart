@@ -6,6 +6,7 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState("");
+  const [image, setImage] = useState("");
   const [token, setToken] = useState("");
   const [isSigned, setIsSigned] = useState(0);
   const [isDone, setIsDone] = useState(0);
@@ -25,6 +26,7 @@ export const UserProvider = ({ children }) => {
       } else {
         setUsername(user.username);
         setToken(data.data.token);
+        setImage(data.data.image);
         setIsSigned(1);
         setIsDone(1);
         console.log("initial login success");
@@ -41,6 +43,8 @@ export const UserProvider = ({ children }) => {
       value={{
         username,
         setUsername,
+        image,
+        setImage,
         token,
         setToken,
         isSigned,
